@@ -1,0 +1,67 @@
+﻿@page "/"
+<PageTitle>Správa skladu</PageTitle>
+
+<h1>Skladové zásoby</h1>
+
+<div class="mb-3">
+    <input placeholder="Název zboží" @bind="novyNazev" /> <!--Input pro název nové položky-->
+    <input placeholder="Množství" type="number" @bind="noveMnozstvi" /> <!--Input pro množství položky-->
+    <button class="btn btn-primary" @onclick="PridatZbozi">Přidat položku (.Add)</button>   <!--Tlačítko pro přidání nové položky-->
+</div>
+
+<hr />
+
+<p>Celkem položek ve skladu: <strong>@sklad.Count</strong></p>  <!--Metoda .Count() spočítá počet záznamů v seznamu-->
+
+<table class="table table-striped">
+    <!--Vytvoření tabulky-->
+    <thead>
+        <tr>
+            <th>Název</th>
+            <th>Množství</th>
+            <th>Akce</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var polozka in sklad) //Cyklus, který postupně projede jednotlivé záznamy v kolekci
+        {
+            <tr>
+                <td>@polozka.Nazev</td> <!--Výpis názvu a množství položek-->
+                <td>@polozka.Mnozstvi ks</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" @onclick="() => OdebratZbozi(polozka)">Odebrat (.Remove)</button> <!--Tlačítko pro odebrání položky-->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button class="btn btn-warning" @onclick="VymazatVse">Vymazat celý sklad (.Clear)</button>  <!--Tlačítko pro vymazání obsahu skladu-->
+@code {
+    private List<Models.Polozka> sklad = new List<Models.Polozka>();    // Kolekce objektů - položek
+
+    private string novyNazev = "";  // Pomocné proměnné pro vstupy z inputů
+    private int noveMnozstvi = 1;
+
+    private void PridatZbozi()  // Metoda pro přidání položky do seznamu
+    {
+        if (!string.IsNullOrEmpty(novyNazev)) // Kontrola, zda není název prázdný
+        {
+            // Vytvoříme novou instanci třídy Položka a rovnou ji vložíme do seznamu pomocí .Add()
+            sklad.Add(new Models.Polozka { Nazev = novyNazev, Mnozstvi = noveMnozstvi });
+
+            novyNazev = ""; // Vyčistíme inputy pro další zadání
+            noveMnozstvi = 1;
+        }
+    }
+
+    private void OdebratZbozi(Models.Polozka polozkaKOdebrani)  // Metoda pro odebrání konkrétní položky
+    {
+        sklad.Remove(polozkaKOdebrani); // Metoda .Remove() najde v seznamu konkrétní objekt a odstraní ho
+    }
+
+    private void VymazatVse()   // Metoda pro vymazání všech položek
+    {
+        sklad.Clear();  // Metoda .Clear() smaže úplně vše ze seznamu
+    }
+}
