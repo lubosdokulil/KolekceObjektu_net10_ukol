@@ -45,7 +45,7 @@
 
     private void PridatZbozi()  // Metoda pro přidání položky do seznamu
     {
-        if (!string.IsNullOrEmpty(novyNazev)) // Kontrola, zda není název prázdný
+        if (!string.IsNullOrWhiteSpace(novyNazev) && noveMnozstvi > 0) // Kontrola, zda není název prázdný nebo mnozsi zaporne cislo
         {
             // Vytvoříme novou instanci třídy Položka a rovnou ji vložíme do seznamu pomocí .Add()
             sklad.Add(new Models.Polozka { Nazev = novyNazev, Mnozstvi = noveMnozstvi });
